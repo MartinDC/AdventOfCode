@@ -1,5 +1,5 @@
-import { Token, Block } from "../core/tokenizer";
-import { AoCComponent } from "../core/defs";
+import { Token, Block } from "../../core/tokenizer";
+import { AoCComponent } from "../../core/defs";
 
 /**
  * Advent of Code 2019
@@ -100,7 +100,7 @@ export class IntCodeProgram {
     }
 }
 
-export class AoCSolutionDay2 extends AoCComponent {
+export class AoCSolutionDay2Part1 extends AoCComponent {
     public part1: boolean = false;
 
     public solve(): number {

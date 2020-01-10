@@ -8,6 +8,11 @@ export const randomNumber = cryptoRnd;
 export const tokenEmpty = ' ';
 export const tokenComma = ',';
 
+export class AOCPartVO {
+    static first: string = '0';
+    static second: string = '1';
+}
+
 export abstract class AoCComponent {
     public id = new ImmutableKey();
     public tokens: Array<Token>;
