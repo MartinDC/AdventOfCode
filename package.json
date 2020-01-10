@@ -1,0 +1,35 @@
+{
+  "name": "aoc",
+  "version": "0.0.1",
+  "description": "Yet another useless thing",
+  "main": "aog.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "npm run build && npx ts-node ./source/server/ws.ts",
+    "local-enviro": "npm run build && http-server -o",
+    "build": "webpack --config ./webpack/webpack.config.dev.js",
+    "prod": "webpack --config ./webpack/webpack.config.prod.js"
+  },
+  "keywords": [
+    "webquail",
+    "typescript",
+    "game"
+  ],
+  "author": "MartinDC",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^10.12.10",
+    "@types/axios": "0.14.0",
+    "@types/ws": "^6.0.1",
+    "axios": "0.18.0",
+    "ws": "^6.1.2"
+  },
+  "devDependencies": {
+    "ts-loader": "4.5.0",
+    "ts-node": "^7.0.1",
+    "typescript": "3.0.1",
+    "webpack": "4.16.5",
+    "webpack-cli": "3.1.0",
+    "webpack-merge": "^4.2.1"
+  }
+}
