@@ -1,8 +1,9 @@
 import { AoCSolutionDay1Part1 } from "./components/day1/day1-1";
 import { AoCSolutionDay1Part2 } from "./components/day1/day1-2";
 import { Display, renderableTags } from "./core/display";
-import { AoCComponent } from "./core/defs";
-import { Tokenizer, TokenizerConfig, defaultConfig } from "./core/tokenizer";
+import { AoCComponent, AOCPartVO } from "./core/defs";
+import { Tokenizer, TokenizerConfig, defaultConfig, intCodeConfig } from "./core/tokenizer";
+import { AoCSolutionDay2Part1 } from "./components/day2/day2-1";
 
 export class AOCConfig {
     display: {
@@ -57,7 +58,7 @@ const calendarRenderActionArea: RenderActionArea = createRenderActionArea('calen
         display.renderContext.appendChild(documentFragment);
     },
     (context: Display, aoc: AdventOfCode19, calendarId: string) => {
-        context.clearDisplay();debugger;
+        context.clearDisplay(); debugger;
         const components = aoc.components.filter((comp: AoCComponent) => {
             return comp.day.includes(`${calendarId}`);
         });
@@ -88,7 +89,7 @@ const componentRenderActionArea: RenderActionArea = createRenderActionArea('comp
     },
     (context: Display, aoc: AdventOfCode19, componentId: string) => {
         const component = aoc.components.find((comp: AoCComponent) => {
-            return comp.part === `${componentId}`;
+            return `${comp.id.key}` === `${componentId}`;
         });
 
         const input = aoc.processInput(context.queryInput());
@@ -145,7 +146,6 @@ export class AdventOfCode19 {
     handleSystemEvents() {
         calendarRenderActionArea.render(this.display, null);
         const onCalendarSelected = (rawInput: string, calendarId: string) => {
-
             calendarRenderActionArea.render(this.display, null);
             calendarRenderActionArea.action(this.display, this, calendarId);
         }
@@ -172,10 +172,11 @@ export class AdventOfCode19 {
 
 const adventOfCode = new AdventOfCode19().bootstrapApplication();
 
-adventOfCode.registerComponent(new AoCSolutionDay1Part1('1', '1'), defaultConfig);
-adventOfCode.registerComponent(new AoCSolutionDay1Part2('1', '2'), defaultConfig);
+adventOfCode.registerComponent(new AoCSolutionDay1Part1('1', AOCPartVO.first), defaultConfig);
+adventOfCode.registerComponent(new AoCSolutionDay1Part2('1', AOCPartVO.second), defaultConfig);
 
-// adventOfCode.registerComponent(new AoCSolutionDay2('Day2'), intCodeConfig);
+adventOfCode.registerComponent(new AoCSolutionDay2Part1('2', AOCPartVO.first), intCodeConfig);
+
 
 // adventOfCode.registerComponent(new AoCSolutionDay1('Day3'), defaultConfig);
 // adventOfCode.registerComponent(new AoCSolutionDay1('Day4'), defaultConfig);
