@@ -28,10 +28,16 @@ declare type RenderCallback = (context: Display, component: AoCComponent) => voi
 declare type ActionCallback = (context: Display, state: AdventOfCode19, id: string) => void;
 
 class RenderActionArea {
-    constructor(public name: string, public render: RenderCallback, public action: ActionCallback) { }
+    constructor(public name: string, public render: RenderCallback, public action: ActionCallback) {
+
+    }
 }
 
-const calendarRenderActionArea: RenderActionArea = new RenderActionArea('calendar',
+const createRenderActionArea = (name: string, renderfn: RenderCallback, actionfn: ActionCallback) => {
+    return new RenderActionArea(name, renderfn, actionfn);
+}
+
+const calendarRenderActionArea: RenderActionArea = createRenderActionArea('calendar',
     (display: Display) => {
         const documentFragment = document.createDocumentFragment();
         for (let i = 1; i < config.calendarMaxDays + 1; i++) {
@@ -42,29 +48,29 @@ const calendarRenderActionArea: RenderActionArea = new RenderActionArea('calenda
                 container.classList.add(containerRefId);
                 container.classList.add('text-center');
                 container.classList.add(`flex-item`, `card`, `hoverable`);
-                container.dataset.calendarId = `Day${i}`;
+                container.dataset.calendarId = `${i}`;
 
-                display.renderTag(renderableTags.header, `Calendar - Day${i}`, container);
+                display.renderTag(renderableTags.header, `Day${i}`, container);
             }
             documentFragment.appendChild(container);
         }
         display.renderContext.appendChild(documentFragment);
     },
     (context: Display, aoc: AdventOfCode19, calendarId: string) => {
-        context.clearDisplay();
+        context.clearDisplay();debugger;
         const components = aoc.components.filter((comp: AoCComponent) => {
-            return comp.name.includes(`${calendarId}`);
+            return comp.day.includes(`${calendarId}`);
         });
 
         components.forEach((component) => componentRenderActionArea.render(context, component));
     }
 );
 
-const componentRenderActionArea: RenderActionArea = new RenderActionArea('component',
+const componentRenderActionArea: RenderActionArea = createRenderActionArea('component',
     (display: Display, component: AoCComponent) => {
         if (!component) { return; }
 
-        const containerRefId = `solution-part-${component.name}`;
+        const containerRefId = `solution-part-${component.part}`;
         const documentFragment = document.createDocumentFragment();
         const container = display.createTag(renderableTags.container, '');
 
@@ -72,9 +78,9 @@ const componentRenderActionArea: RenderActionArea = new RenderActionArea('compon
             container.classList.add(containerRefId);
             container.classList.add('text-center');
             container.classList.add(`flex-item`, `card`, `hoverable`);
-            container.dataset.componentId = component.name;
+            container.dataset.componentId = `${component.id.key}`;
 
-            display.renderTag(renderableTags.header, `Part - ${component.name}`, container);
+            display.renderTag(renderableTags.header, `Part - ${component.part}`, container);
         }
 
         documentFragment.appendChild(container);
@@ -82,11 +88,11 @@ const componentRenderActionArea: RenderActionArea = new RenderActionArea('compon
     },
     (context: Display, aoc: AdventOfCode19, componentId: string) => {
         const component = aoc.components.find((comp: AoCComponent) => {
-            return comp.name === `${componentId}`;
+            return comp.part === `${componentId}`;
         });
 
         const input = aoc.processInput(context.queryInput());
-        if (component && component.name) {
+        if (component && component.part && component.day) {
             const { blocks, tokens } = input.value;
             component.init(input.rawInput, tokens, blocks);
             aoc.currentComponent = component;
@@ -102,11 +108,16 @@ const componentRenderActionArea: RenderActionArea = new RenderActionArea('compon
             })
         }
 
+        if (!calculatedSolution || isNaN(calculatedSolution)) {
+            context.renderTag(renderableTags.header, `Failed to solve this puzzle :(`, null, 'w-100 flex-justify-center');
+            context.renderTag(renderableTags.small, `(You should probably check your input. Is it correct?)`, null, 'w-100 flex-justify-center');
+            return;
+        }
+
         //Render complete
         context.renderTag(renderableTags.header, `Puzzle solution is:`, null, 'w-100 flex-justify-center');
         context.renderTag(renderableTags.small, `(Solution is also copied to your clipboard)`, null, 'w-100 flex-justify-center');
         context.renderTag(renderableTags.header, `${calculatedSolution}`, null, 'w-100 flex-justify-center');
-
     }
 );
 
@@ -142,7 +153,7 @@ export class AdventOfCode19 {
         const onComponentSelected = (rawInput: string, componentId: string) => {
             const input = this.processInput(rawInput);
             if (input.error || !input.value) { return console.log('AdventOfCode19 - Could not read input'); }
-            
+
             componentRenderActionArea.action(this.display, this, componentId);
         }
 
@@ -161,8 +172,8 @@ export class AdventOfCode19 {
 
 const adventOfCode = new AdventOfCode19().bootstrapApplication();
 
-adventOfCode.registerComponent(new AoCSolutionDay1Part1('Day1-1'), defaultConfig);
-adventOfCode.registerComponent(new AoCSolutionDay1Part2('Day1-2'), defaultConfig);
+adventOfCode.registerComponent(new AoCSolutionDay1Part1('1', '1'), defaultConfig);
+adventOfCode.registerComponent(new AoCSolutionDay1Part2('1', '2'), defaultConfig);
 
 // adventOfCode.registerComponent(new AoCSolutionDay2('Day2'), intCodeConfig);
 

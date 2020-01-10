@@ -14,7 +14,7 @@ export abstract class AoCComponent {
     public blocks: Array<Block>;
     public rawInput: string;
 
-    constructor(public name: string) { }
+    constructor(public day: string, public part: string) { }
     public abstract solve(): number;
 
     public init(rawInput: string, tokens: Array<Token>, blocks: Array<Block>): void {
