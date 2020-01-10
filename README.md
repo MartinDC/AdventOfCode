@@ -9,7 +9,7 @@ In a terminal run the following commands:
 
 **npm run build**
 
-Open **index.html**(best viewed in Chrome >= 79) after running the npm build script. 
+Open **index.html** after running the npm build script(best viewed in Chrome >= 79). 
 
 You will be presented with a UI to navigate calendar days and puzzle parts. 
 Dont forget to enter your input before selecting a problem :=)
